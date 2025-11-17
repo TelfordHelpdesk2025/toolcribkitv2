@@ -198,6 +198,10 @@ const [accept_remarks, setAcceptRemarks] = useState("");
                 <input type="text" name="machine" value={selectedRow.machine} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
             <div>
+                <label htmlFor="">Serial</label>
+                <input type="text" name="serial_no" value={selectedRow.serial_no} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
+            </div>
+            <div>
                 <label htmlFor="">Location</label>
                 <input type="text" name="location" value={selectedRow.location} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
@@ -206,12 +210,16 @@ const [accept_remarks, setAcceptRemarks] = useState("");
                 <input type="text" name="status" value={selectedRow.status} className="w-full border border-blue-700 text-white rounded-md p-2 pointer-events-none bg-blue-500" readOnly/>
             </div>
             <div>
-                <label htmlFor="">Purpose</label>
-                <input type="text" name="purpose" value={selectedRow.purpose} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
+                {/* <label htmlFor="">Purpose</label>
+                <input type="text" name="purpose" value={selectedRow.purpose} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/> */}
             </div>
              
             
       </div>
+      <div>
+              <label htmlFor="">Purpose</label>
+              <textarea name="purpose" value={selectedRow.purpose} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
+            </div>
       <div>
                 <label htmlFor="">Borrower remarks</label>
                 <textarea name="purpose" value={selectedRow.returned_remarks} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly></textarea>
@@ -238,19 +246,20 @@ const [accept_remarks, setAcceptRemarks] = useState("");
         >
           <i className="fa-solid fa-xmark mr-1"></i> Close
         </button>
-        <button
+          <button
   onClick={() => {
     if (!selectedRow) return;
     if (confirm("Are you sure you want to accept this request?")) {
-      router.post(
-        route("conversionkit.borrowed.accept", {
+       router.put(
+  route("conversionkit.borrowed.accept",
+    {
           id: selectedRow.id,
-          package_to: selectedRow.package_to,
           machine: selectedRow.machine,
-          case_no: selectedRow.case_no,
+          serial_no: selectedRow.serial_no,
           location: selectedRow.location,
-        }),
-        { accept_remarks }, // send remarks
+    }
+  ),
+  { accept_remarks }, // ✅ send remarks to backend
         {
           onSuccess: () => {
             alert("✅ Accept request successfully!");
@@ -306,6 +315,10 @@ const [accept_remarks, setAcceptRemarks] = useState("");
                 <input type="text" name="machine" value={selectedRow.machine} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
             <div>
+                <label htmlFor="">Serial</label>
+                <input type="text" name="serial_no" value={selectedRow.serial_no} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
+            </div>
+            <div>
                 <label htmlFor="">Location</label>
                 <input type="text" name="location" value={selectedRow.location} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
@@ -314,10 +327,14 @@ const [accept_remarks, setAcceptRemarks] = useState("");
                 <input type="text" name="status" value={selectedRow.status} className="w-full border border-rose-700 text-white rounded-md p-2 pointer-events-none bg-rose-500" readOnly/>
             </div>
             <div>
-                <label htmlFor="">Purpose</label>
-                <input type="text" name="purpose" value={selectedRow.purpose} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
+                {/* <label htmlFor="">Purpose</label>
+                <input type="text" name="purpose" value={selectedRow.purpose} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/> */}
             </div>
         </div>
+        <div>
+              <label htmlFor="">Purpose</label>
+              <textarea name="purpose" value={selectedRow.purpose} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
+            </div>
         <div>
                 <label htmlFor="">Remarks</label>
             <textarea

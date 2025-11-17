@@ -53,7 +53,20 @@ export default function Dashboard({
       {["superadmin", "admin"].includes(role) || ["1710", "16103", "1707"].includes(empBadge) ? (
         <div>
           <p className="text-lg font-semibold mb-4">Welcome Admin, 
-            <span className="font-bold text-purple-400 text-1xl ml-2">{empName}</span></p>
+            <span
+  className="
+    font-bold
+    text-purple-500       /* Light mode */
+    drop-shadow-[0_0_6px_rgba(0,255,255,0.3)]  /* Light glow */
+    text-1xl
+    ml-2
+  "
+>
+  {empName}
+</span>
+
+
+            </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <SummaryCard title="Total Conversion Kits" value={totalConversionkitInventory} color="bg-cyan-200" icon={<i className="fa-solid fa-list"></i>}/>
             <SummaryCard title="Total Borrowed Conversionkit" value={totalConversionkitBorrowed} color="bg-pink-200" icon={<i className="fa-solid fa-arrows-up-down"></i>}/>
@@ -175,7 +188,7 @@ export default function Dashboard({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             {/* Conversion Kit Card */}
-            <div className="card bg-blue-400 text-white w-full shadow-lg">
+            <div className="card bg-emerald-300 text-white w-full shadow-lg">
               <div className="card-body">
                 <h2 className="card-title flex items-center gap-2">
                   <i className="fa-regular fa-thumbs-up text-4xl"></i>

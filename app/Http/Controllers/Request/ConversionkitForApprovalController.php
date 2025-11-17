@@ -32,7 +32,7 @@ class ConversionkitForApprovalController extends Controller
 
         $packagesTo = DB::connection('server26')
             ->table('conversion_kit')
-            ->select('package_to', 'machine', 'case_no', 'location', 'borrowed_status')
+            ->select('package_to', 'machine', 'case_no', 'serial_no', 'location', 'borrowed_status')
             ->where(function ($q) {
                 $q->whereRaw('LOWER(borrowed_status) = ?', ['returned'])
                     ->orWhereNull('borrowed_status');

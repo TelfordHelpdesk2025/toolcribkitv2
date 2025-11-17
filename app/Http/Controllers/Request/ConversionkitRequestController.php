@@ -31,7 +31,7 @@ class conversionkitRequestController extends Controller
 
         $packagesTo = DB::connection('server26')
             ->table('conversion_kit')
-            ->select('package_to', 'machine', 'case_no', 'location', 'borrowed_status')
+            ->select('package_to', 'machine', 'case_no', 'serial_no', 'location', 'borrowed_status')
             ->where(function ($q) {
                 $q->whereRaw('LOWER(borrowed_status) = ?', ['returned'])
                     ->orWhereNull('borrowed_status');
@@ -120,6 +120,7 @@ class conversionkitRequestController extends Controller
             'package_to'    => 'required|string',
             'case_no'       => 'required|string',
             'machine'       => 'required|string',
+            'serial_no'       => 'required|string',
             'location'      => 'required|string',
             'taper_track'   => 'required|string',
             'purpose'       => 'required|string',
@@ -134,6 +135,7 @@ class conversionkitRequestController extends Controller
             'package_to'    => $request->package_to,
             'case_no'       => $request->case_no,
             'machine'       => $request->machine,
+            'serial_no'       => $request->serial_no,
             'location'      => $request->location,
             'taper_track'   => $request->taper_track,
             'purpose'       => $request->purpose,
@@ -143,7 +145,7 @@ class conversionkitRequestController extends Controller
         return back()->with('success', '✅ Request submitted successfully!');
     }
 
-    public function approve($id, $package_to, $machine, $case_no, $location, Request $request)
+    public function approve($id, $machine, $serial_no, $location, Request $request)
     {
         DB::connection('server26')->table('toolcrib_tbl')
             ->where('id', $id)
@@ -156,9 +158,8 @@ class conversionkitRequestController extends Controller
             ]);
 
         DB::connection('server26')->table('conversion_kit')
-            ->where('package_to', $package_to)
             ->where('machine', $machine)
-            ->where('case_no', $case_no)
+            ->where('serial_no', $serial_no)
             ->where('location', $location)
             ->update([
                 'borrowed_status' => 'Borrowed'

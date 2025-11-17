@@ -40,6 +40,7 @@ const closeModals = () => {
     const [selectedTo, setSelectedTo] = useState("");
     const [caseNo, setCaseNo] = useState("");
     const [machine, setMachine] = useState("");
+    const [serial_no, setSerialNo] = useState("");
     const [location, setLocation] = useState("");
 
     // 🔹 Handle Package To selection
@@ -53,16 +54,18 @@ const closeModals = () => {
         if (selectedPackage) {
             setCaseNo(selectedPackage.case_no || "");
             setMachine(selectedPackage.machine || "");
+            setSerialNo(selectedPackage.serial_no || "");
             setLocation(selectedPackage.location || "");
         } else {
             // reset fields if no match
             setCaseNo("");
             setMachine("");
+            setSerialNo("");
             setLocation("");
         }
     };
 
-    const empname = empData?.NICKNAME;
+    const empname = empData?.EMPNAME;
     const empid = empData?.EMPLOYID;
     const empTeam = empData?.TEAM;
 
@@ -71,6 +74,7 @@ const closeModals = () => {
     2: "A",
     3: "B",
     4: "C",
+    5: "Unassigned",
     };
 
     const Eteam = teamMap[empTeam] || ""; // default to empty if undefined
@@ -159,10 +163,13 @@ const closeModals = () => {
         package_to: e.target.package_to.value,
         case_no: caseNo,
         machine: machine,
+        serial_no: serial_no,
         location: location,
         taper_track: e.target.taper_track.value,
         purpose: e.target.purpose.value,
     };
+
+    console.log("Submitting Data:", data);
 
     router.post(route('conversionkit.request.store'), data, {
         onSuccess: () => {
@@ -379,10 +386,11 @@ const [remarks, setRemarks] = useState("");
         </div>
 
         {/* Details */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-4 gap-4">
           {[
             { label: "Case No", name: "case_no", value: caseNo, setter: setCaseNo },
             { label: "Machine", name: "machine", value: machine, setter: setMachine },
+            { label: "Serial", name: "serial_no", value: serial_no, setter: setSerialNo },
           ].map((f, i) => (
             <div key={i}>
               <label className="block text-sm font-medium text-gray-500">{f.label}</label>
@@ -391,8 +399,8 @@ const [remarks, setRemarks] = useState("");
                 name={f.name}
                 value={f.value}
                 onChange={(e) => f.setter(e.target.value)}
-                className="w-full border border-gray-300 rounded-md p-2"
-                required
+                className="w-full border border-gray-300 rounded-md p-2 bg-gray-100 cursor-not-allowed"
+                readOnly
               />
             </div>
           ))}
@@ -427,7 +435,7 @@ const [remarks, setRemarks] = useState("");
 
         {/* Purpose */}
         <div>
-          <label className="block text-sm font-medium text-gray-500">Purpose</label>
+          <label className="block text-sm font-medium text-gray-500">Purpose/ Note</label>
           <textarea
             name="purpose"
             required
@@ -485,6 +493,10 @@ const [remarks, setRemarks] = useState("");
                 <label htmlFor="">Machine</label>
                 <input type="text" name="machine" value={selectedRow.machine} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
+             <div>
+                <label htmlFor="">Serial</label>
+                <input type="text" name="serial_no" value={selectedRow.serial_no} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
+            </div>
             <div>
                 <label htmlFor="">Location</label>
                 <input type="text" name="location" value={selectedRow.location} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
@@ -494,12 +506,17 @@ const [remarks, setRemarks] = useState("");
                 <input type="text" name="status" value={selectedRow.status} className="w-full border border-blue-700 text-white rounded-md p-2 pointer-events-none bg-blue-500" readOnly/>
             </div>
             <div>
-                <label htmlFor="">Purpose</label>
-                <input type="text" name="purpose" value={selectedRow.purpose} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
+                {/* <label htmlFor="">Purpose</label> */}
+                {/* <input type="text" name="purpose" value={selectedRow.purpose} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/> */}
+                
             </div>
             
       </div>
             <div>
+              <label htmlFor="">Purpose</label>
+              <textarea name="purpose" value={selectedRow.purpose} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
+            </div>
+  <div>
     <label htmlFor="remarks" className="block text-sm font-medium text-gray-700">
       Remarks
     </label>
@@ -525,13 +542,12 @@ const [remarks, setRemarks] = useState("");
   onClick={() => {
     if (!selectedRow) return;
     if (confirm("Are you sure you want to approve this request?")) {
-      router.post(
+      router.put(
   route("conversionkit.request.approve",
     {
           id: selectedRow.id,
-          package_to: selectedRow.package_to,
           machine: selectedRow.machine,
-          case_no: selectedRow.case_no,
+          serial_no: selectedRow.serial_no,
           location: selectedRow.location,
     }
   ),
@@ -599,6 +615,10 @@ const [remarks, setRemarks] = useState("");
                 <input type="text" name="machine" value={selectedRow.machine} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
             <div>
+                <label htmlFor="">Serial</label>
+                <input type="text" name="serial_no" value={selectedRow.serial_no} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
+            </div>
+            <div>
                 <label htmlFor="">Location</label>
                 <input type="text" name="location" value={selectedRow.location} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
@@ -607,10 +627,14 @@ const [remarks, setRemarks] = useState("");
                 <input type="text" name="status" value={selectedRow.status} className="w-full border border-emerald-700 text-white rounded-md p-2 pointer-events-none bg-emerald-500" readOnly/>
             </div>
             <div>
-                <label htmlFor="">Purpose</label>
-                <input type="text" name="purpose" value={selectedRow.purpose} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
+                {/* <label htmlFor="">Purpose</label>
+                <input type="text" name="purpose" value={selectedRow.purpose} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/> */}
             </div>
         </div>
+        <div>
+              <label htmlFor="">Purpose</label>
+              <textarea name="purpose" value={selectedRow.purpose} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
+            </div>
         <div>
                 <label htmlFor="">Remarks</label>
             <textarea name="purpose" value={selectedRow.remarks} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly></textarea>

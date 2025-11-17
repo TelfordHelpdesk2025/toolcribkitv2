@@ -31,7 +31,7 @@ class ConversionkitTurnoverController extends Controller
 
         $packagesTo = DB::connection('server26')
             ->table('conversion_kit')
-            ->select('package_to', 'machine', 'case_no', 'location', 'borrowed_status')
+            ->select('package_to', 'machine', 'case_no', 'serial_no', 'location', 'borrowed_status')
             ->where(function ($q) {
                 $q->whereRaw('LOWER(borrowed_status) = ?', ['returned'])
                     ->orWhereNull('borrowed_status');
@@ -146,7 +146,7 @@ class ConversionkitTurnoverController extends Controller
         return back()->with('success', 'Request turnover successfully!');
     }
 
-    public function accept($id, $package_to, $machine, $case_no, $location, Request $request)
+    public function accept($id, $machine, $serial_no, $location, Request $request)
     {
         DB::connection('server26')->table('toolcrib_tbl')
             ->where('id', $id)
@@ -159,9 +159,8 @@ class ConversionkitTurnoverController extends Controller
             ]);
 
         DB::connection('server26')->table('conversion_kit')
-            ->where('package_to', $package_to)
             ->where('machine', $machine)
-            ->where('case_no', $case_no)
+            ->where('serial_no', $serial_no)
             ->where('location', $location)
             ->update([
                 'borrowed_status' => 'Returned'
