@@ -29,6 +29,8 @@
         "chart.js": "^4.5.0",
         "dayjs": "^1.11.18",
         "framer-motion": "^12.23.24",
+        "laravel-echo": "^2.2.6",
+        "pusher-js": "^8.4.0",
         "react-chartjs-2": "^5.3.0",
         "react-hot-toast": "^2.5.2",
         "zustand": "^5.0.6"

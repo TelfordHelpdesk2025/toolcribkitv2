@@ -224,12 +224,13 @@ const tableRows = tableData.data.map((row) => ({
   status_badge: getStatusBadge(row.status),
   actions: (() => {
     if (
-      ["superadmin", "admin", "moderator"].includes(emp_data?.emp_system_role) && ["16103", "1710", "1707"].includes(emp_data?.emp_id) &&
+      ["superadmin", "admin", "toolcrib"].includes(emp_data?.emp_system_role) && ["16103", "1710", "1707"].includes(emp_data?.emp_id) &&
       row.status === "For Approval"
     ) {
       return (
         <button
           className="px-3 py-2 bg-emerald-500 text-white rounded-md hover:bg-emerald-600 border border-emerald-800 hover:border-emerald-100"
+          // className="px-3 py-2 text-emerald-600 rounded-md bg-emerald-100 border-2 border-emerald-700 hover:bg-emerald-800 hover:text-white hover:border-white"
           onClick={() => openEditModal(row)}
         >
           <i className="fa-solid fa-clipboard-list mr-1"></i> Assess
@@ -509,7 +510,6 @@ const [remarks, setRemarks] = useState("");
   route("conversionkit.request.approve",
     {
           id: selectedRow.id,
-          machine: selectedRow.machine,
           serial_no: selectedRow.serial_no,
           location: selectedRow.location,
     }

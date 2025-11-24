@@ -92,7 +92,7 @@ const tableRows = tableData.data.map((row) => ({
   actions: (() => {
 
     if (
-      ["superadmin", "admin", "moderator"].includes(emp_data?.emp_system_role) && ["16103", "1710", "1707"].includes(emp_data?.emp_id) &&
+      ["superadmin", "admin", "toolcrib"].includes(emp_data?.emp_system_role) && ["16103", "1710", "1707"].includes(emp_data?.emp_id) &&
       row.status === "Turnover"
     ) {
       return (

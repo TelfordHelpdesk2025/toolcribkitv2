@@ -227,12 +227,13 @@ const tableRows = tableData.data.map((row) => ({
   status_badge: getStatusBadge(row.status),
   actions: (() => {
     if (
-      ["superadmin", "admin", "moderator"].includes(emp_data?.emp_system_role) && ["16103", "1710", "1707"].includes(emp_data?.emp_id) &&
+      ["superadmin", "admin", "toolcrib"].includes(emp_data?.emp_system_role) && ["16103", "1710", "1707"].includes(emp_data?.emp_id) &&
       row.status === "For Approval"
     ) {
       return (
         <button
           className="px-3 py-2 bg-emerald-500 text-white rounded-md hover:bg-emerald-600 border border-emerald-800 hover:border-emerald-100"
+          // className="px-3 py-2 text-emerald-600 bg-emerald-100 border-emerald-700 hover:bg-emerald-800 hover:text-white hover:border-white"
           onClick={() => openEditModal(row)}
         >
           <i className="fa-solid fa-clipboard-list mr-1"></i> Assess
@@ -241,7 +242,8 @@ const tableRows = tableData.data.map((row) => ({
     } else if (row.status === "For Acknowledge") {
       return (
         <button
-          className="px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 border border-blue-800 hover:border-blue-100"
+          // className="px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 border border-blue-800 hover:border-blue-100"
+          className="px-3 py-2 text-white bg-blue-400 border-blue-700 hover:bg-blue-800 hover:text-white hover:border-white rounded-md"
           onClick={() => openViewModal(row)}
         >
           <i className="fas fa-eye mr-1"></i> View
@@ -263,6 +265,8 @@ const tableRows = tableData.data.map((row) => ({
 const [remarks, setRemarks] = useState("");
 
 
+
+
     return (
         <AuthenticatedLayout>
             <Head title="Conversion Kit Request" />
@@ -272,24 +276,25 @@ const [remarks, setRemarks] = useState("");
 
                 {/* 🔹 Request New Button */}
 <button
-    onClick={() => {
-      if (empData.hasBorrowed) {
-            alert(`⚠️ Sorry. ${empData.NICKNAME} must return all borrowed items before making a new request.`);
-        } else if (empData.hasTurnover) {
-            alert(`⚠️ Sorry. ${empData.NICKNAME} has already returned the item, but it’s still pending admin confirmation.`);
-        } else {
-            setShowModal(true);
-        }
-    }}
-    className={`px-4 py-2 rounded-md text-white ${
-        empData.hasBorrowed || empData.hasTurnover
-            ? "bg-blue-400 cursor-not-allowed"
-            : "bg-blue-600 hover:bg-blue-700"
-    }`}
-    // disabled={empData.hasBorrowed}
+  onClick={() => {
+    if (empData.requestCount >= 2) {
+      alert(`⚠️ Sorry. ${empData.NICKNAME} can only request 2 items at a time.`);
+    } else if (empData.hasTurnover) {
+      alert(`⚠️ Sorry. ${empData.NICKNAME} has already returned the item, but it’s still pending admin confirmation.`);
+    } else {
+      setShowModal(true);
+    }
+  }}
+  className={`px-4 py-2 rounded-md text-white ${
+      empData.requestCount >= 2 || empData.hasTurnover
+        ? "bg-blue-400 cursor-not-allowed"
+        : "bg-blue-600 hover:bg-blue-700"
+  }`}
 >
-    <i className="fa-solid fa-plus mr-2"></i> Request New
+  <i className="fa-solid fa-plus mr-2"></i> Request New
 </button>
+
+
             </div>
 
             {/* 🔹 DataTable */}
@@ -386,7 +391,7 @@ const [remarks, setRemarks] = useState("");
         </div>
 
         {/* Details */}
-        <div className="grid grid-cols-4 gap-4">
+        {/* <div className="grid grid-cols-4 gap-4">
           {[
             { label: "Case No", name: "case_no", value: caseNo, setter: setCaseNo },
             { label: "Machine", name: "machine", value: machine, setter: setMachine },
@@ -419,7 +424,44 @@ const [remarks, setRemarks] = useState("");
               />
             </div>
           ))}
-        </div>
+        </div> */}
+
+        <div className="grid grid-cols-4 gap-4">
+  {[
+    { label: "Case No", name: "case_no", value: caseNo, setter: setCaseNo, editable: true },
+    { label: "Machine", name: "machine", value: machine, setter: setMachine, editable: true },
+    { label: "Serial", name: "serial_no", value: serial_no, setter: setSerialNo, editable: false },
+  ].map((f, i) => (
+    <div key={i}>
+      <label className="block text-sm font-medium text-gray-500">{f.label}</label>
+      <input
+        type="text"
+        name={f.name}
+        value={f.value}
+        onChange={(e) => f.editable && f.setter(e.target.value)}
+        className={`w-full border border-gray-300 rounded-md p-2 ${f.editable ? "bg-white" : "bg-gray-100 cursor-not-allowed"}`}
+        readOnly={!f.editable}
+      />
+    </div>
+  ))}
+
+  {[
+    { label: "Rack Location", name: "location", value: location, setter: setLocation, editable: false },
+  ].map((f, i) => (
+    <div key={i}>
+      <label className="block text-sm font-medium text-gray-500">{f.label}</label>
+      <input
+        type="text"
+        name={f.name}
+        value={f.value}
+        onChange={(e) => f.editable && f.setter(e.target.value)}
+        className={`w-full border border-gray-300 rounded-md p-2 ${f.editable ? "bg-white" : "bg-gray-100 cursor-not-allowed"}`}
+        readOnly={!f.editable}
+      />
+    </div>
+  ))}
+</div>
+
 
         {/* Taper Track */}
         <div>
@@ -546,7 +588,6 @@ const [remarks, setRemarks] = useState("");
   route("conversionkit.request.approve",
     {
           id: selectedRow.id,
-          machine: selectedRow.machine,
           serial_no: selectedRow.serial_no,
           location: selectedRow.location,
     }

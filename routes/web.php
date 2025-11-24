@@ -39,14 +39,14 @@ Route::delete("/inventory/toolkit/destroy/{id}", [ToolsController::class, 'destr
 
 Route::get("/request/conversionkit", [conversionkitRequestController::class, 'index'])->name('conversionkit.request.index');
 Route::post("/request/conversionkit/store", [conversionkitRequestController::class, 'store'])->name('conversionkit.request.store');
-Route::put('/conversionkit/request/approve/{id}/{machine}/{serial_no}/{location}', [ConversionKitRequestController::class, 'approve'])->name('conversionkit.request.approve');
+Route::put('/conversionkit/request/approve/{id}/{serial_no}/{location}', [ConversionKitRequestController::class, 'approve'])->name('conversionkit.request.approve');
 
 Route::post('/conversionkit/request/acknowledge/{id}', [ConversionKitRequestController::class, 'acknowledge'])->name('conversionkit.request.acknowledge');
 
 Route::get("/borrowed/conversionkitBorrowed", [ConversionkitBorrowedController::class, 'index'])->name('conversionkit.borrowed.index');
 Route::post('/conversionkit/request/borrowed/{id}', [ConversionkitBorrowedController::class, 'returned'])->name('conversionkit.borrowed.returned');
 
-Route::put('/conversionkit/borrowed/accept/{id}/{machine}/{serial_no}/{location}', [ConversionkitBorrowedController::class, 'accept'])->name('conversionkit.borrowed.accept');
+Route::put('/conversionkit/borrowed/accept/{id}/{serial_no}/{location}', [ConversionkitBorrowedController::class, 'accept'])->name('conversionkit.borrowed.accept');
 
 Route::get("/returned/conversionkitReturned", [ConversionkitReturnedController::class, 'index'])->name('conversionkit.returned.index');
 
