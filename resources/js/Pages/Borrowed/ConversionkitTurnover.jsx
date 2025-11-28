@@ -210,8 +210,7 @@ const [accept_remarks, setAcceptRemarks] = useState("");
                 <input type="text" name="status" value={selectedRow.status} className="w-full border border-blue-700 text-white rounded-md p-2 pointer-events-none bg-blue-500" readOnly/>
             </div>
             <div>
-                {/* <label htmlFor="">Purpose</label>
-                <input type="text" name="purpose" value={selectedRow.purpose} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/> */}
+                <input type="text" name="conversionkitId" value={selectedRow.conversionkitId} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
              
             
@@ -254,7 +253,7 @@ const [accept_remarks, setAcceptRemarks] = useState("");
   route("conversionkit.borrowed.accept",
     {
           id: selectedRow.id,
-          serial_no: selectedRow.serial_no,
+          conversionkitId: selectedRow.conversionkitId,
           location: selectedRow.location,
     }
   ),

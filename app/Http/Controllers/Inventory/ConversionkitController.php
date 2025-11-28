@@ -62,12 +62,13 @@ class ConversionkitController extends Controller
 
         // dd($request->all());
         $checkIfExists = DB::connection('server26')->table('conversion_kit')
-            ->where('serial_no', $request->input('serial_no'))
+            ->where('conversionkit_id', $request->input('conversionkit_id'))
             ->exists();
 
         if (!$checkIfExists) {
             DB::connection('server26')->table('conversion_kit')
                 ->insert([
+                    'conversionkit_id' => $request->input('conversionkit_id'),
                     'case_no' => $request->input('case_no'),
                     'asset_no' => $request->input('asset_no'),
                     'model' => $request->input('model'),
@@ -94,7 +95,6 @@ class ConversionkitController extends Controller
             'location' => 'required|string|max:255',
             'machine' => 'required|string|max:255',
             'condition' => 'required|string|max:255',
-            'borrowed_status' => 'required|string|max:255',
         ]);
 
         DB::connection('server26')->table('conversion_kit')
@@ -108,12 +108,13 @@ class ConversionkitController extends Controller
                 'location' => $request->location,
                 'machine' => $request->machine,
                 'condition' => $request->condition,
-                'borrowed_status' => $request->borrowed_status,
                 'updated_by' => session('emp_data')['emp_name'] ?? 'Unknown',
             ]);
 
-        return back()->with('success', 'Conversion kit updated successfully!');
+        return redirect()->route('conversionkit.index')
+            ->with('success', 'Conversion kit updated successfully!');
     }
+
 
     public function destroy($id)
     {

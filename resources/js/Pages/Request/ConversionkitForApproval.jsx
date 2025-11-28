@@ -38,6 +38,7 @@ const closeModals = () => {
 
     // 🔹 State for selected package info
     const [selectedTo, setSelectedTo] = useState("");
+    const [conversionkitId, setconversionkitId] = useState("");
     const [caseNo, setCaseNo] = useState("");
     const [machine, setMachine] = useState("");
     const [serial_no, setSerialNo] = useState("");
@@ -52,12 +53,14 @@ const closeModals = () => {
         const selectedPackage = packagesTo.find((pkg) => pkg.package_to === value);
 
         if (selectedPackage) {
+          setconversionkitId(selectedPackage.conversionkit_id || "");
             setCaseNo(selectedPackage.case_no || "");
             setMachine(selectedPackage.machine || "");
             setSerialNo(selectedPackage.serial_no || "");
             setLocation(selectedPackage.location || "");
         } else {
             // reset fields if no match
+            setconversionkitId("");
             setCaseNo("");
             setMachine("");
             setSerialNo("");
@@ -160,6 +163,7 @@ const closeModals = () => {
         team: Eteam,
         package_from: e.target.package_from.value,
         package_to: e.target.package_to.value,
+        conversionkitId: conversionkitId,
         case_no: caseNo,
         machine: machine,
         serial_no: serial_no,
@@ -367,23 +371,25 @@ const [remarks, setRemarks] = useState("");
         {/* Details */}
         <div className="grid grid-cols-3 gap-4">
           {[
-            { label: "Case No", name: "case_no", value: caseNo, setter: setCaseNo },
-            { label: "Machine", name: "machine", value: machine, setter: setMachine },
-            { label: "Serial", name: "serial_no", value: serial_no, setter: setSerialNo },
-            { label: "Rack Location", name: "location", value: location, setter: setLocation },
-          ].map((f, i) => (
-            <div key={i}>
-              <label className="block text-sm font-medium text-gray-500">{f.label}</label>
-              <input
-                type="text"
-                name={f.name}
-                value={f.value}
-                onChange={(e) => f.setter(e.target.value)}
-                className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100"
-                readOnly
-              />
-            </div>
-          ))}
+  { label: "Conversionkit ID", name: "conversionkit_id", value: conversionkitId, setter: setconversionkitId, hidden: true },
+  { label: "Case No", name: "case_no", value: caseNo, setter: setCaseNo, editable: true },
+  { label: "Machine", name: "machine", value: machine, setter: setMachine, editable: true },
+  { label: "Serial", name: "serial_no", value: serial_no, setter: setSerialNo, editable: false },
+].map((f, i) => (
+  !f.hidden && (
+    <div key={i}>
+      <label className="block text-sm font-medium text-gray-500">{f.label}</label>
+      <input
+        type="text"
+        name={f.name}
+        value={f.value}
+        onChange={(e) => f.editable && f.setter(e.target.value)}
+        className={`w-full border border-gray-300 rounded-md p-2 ${f.editable ? "bg-white" : "bg-gray-100 cursor-not-allowed"}`}
+        readOnly={!f.editable}
+      />
+    </div>
+  )
+))}
         </div>
 
         {/* Taper Track */}
@@ -471,8 +477,7 @@ const [remarks, setRemarks] = useState("");
                 <input type="text" name="status" value={selectedRow.status} className="w-full border border-blue-700 text-white rounded-md p-2 pointer-events-none bg-blue-500" readOnly/>
             </div>
             <div>
-                {/* <label htmlFor="">Purpose</label>
-                <input type="text" name="purpose" value={selectedRow.purpose} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/> */}
+                <input type="text" name="conversionkitId" value={selectedRow.conversionkitId} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
             
       </div>
@@ -510,7 +515,7 @@ const [remarks, setRemarks] = useState("");
   route("conversionkit.request.approve",
     {
           id: selectedRow.id,
-          serial_no: selectedRow.serial_no,
+          conversionkitId: selectedRow.conversionkitId,
           location: selectedRow.location,
     }
   ),

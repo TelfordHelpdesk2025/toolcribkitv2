@@ -32,7 +32,7 @@ class conversionkitRequestController extends Controller
 
         $packagesTo = DB::connection('server26')
             ->table('conversion_kit')
-            ->select('package_to', 'machine', 'case_no', 'serial_no', 'location', 'borrowed_status')
+            ->select('conversionkit_id', 'package_to', 'machine', 'case_no', 'serial_no', 'location', 'borrowed_status')
             ->where(function ($q) {
                 $q->whereRaw('LOWER(borrowed_status) = ?', ['returned'])
                     ->orWhereNull('borrowed_status');
@@ -129,6 +129,7 @@ class conversionkitRequestController extends Controller
             'case_no'       => 'required|string',
             'machine'       => 'required|string',
             'serial_no'       => 'required|string',
+            'conversionkitId'       => 'required|string',
             'location'      => 'required|string',
             'taper_track'   => 'required|string',
             'purpose'       => 'required|string',
@@ -144,6 +145,7 @@ class conversionkitRequestController extends Controller
             'case_no'       => $request->case_no,
             'machine'       => $request->machine,
             'serial_no'       => $request->serial_no,
+            'conversionkitId'       => $request->conversionkitId,
             'location'      => $request->location,
             'taper_track'   => $request->taper_track,
             'purpose'       => $request->purpose,
@@ -201,7 +203,7 @@ class conversionkitRequestController extends Controller
 
 
 
-    public function approve($id, $serial_no, $location, Request $request)
+    public function approve($id, $conversionkitId, $location, Request $request)
     {
         DB::connection('server26')->table('toolcrib_tbl')
             ->where('id', $id)
@@ -214,7 +216,7 @@ class conversionkitRequestController extends Controller
             ]);
 
         DB::connection('server26')->table('conversion_kit')
-            ->where('serial_no', $serial_no)
+            ->where('conversionkit_id', $conversionkitId)
             ->where('location', $location)
             ->update([
                 'borrowed_status' => 'Borrowed'

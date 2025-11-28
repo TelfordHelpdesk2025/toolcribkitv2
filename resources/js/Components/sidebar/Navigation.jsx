@@ -19,8 +19,12 @@ export default function NavLinks() {
                 label="Requested Items"
                 icon={<i className="fa-solid fa-arrows-turn-to-dots"></i>}
                 links={[
+                    // {
+                    //     href: route("conversionkit.request.index"),
+                    //     label: "Conversion Kits",
+                    // },
                     {
-                        href: route("conversionkit.request.index"),
+                        href: route("maintenance"),
                         label: "Conversion Kits",
                     },
                     {
@@ -77,11 +81,11 @@ export default function NavLinks() {
             />
 )}
 
-            {["superadmin", "admin"].includes(emp_data?.emp_system_role) && (
+            {["superadmin", "admin", "toolcrib"].includes(emp_data?.emp_system_role) && (
                 <div>
                     <SidebarLink
                         href={route("admin")}
-                        label="Administrators"
+                        label="PM Personnel"
                         icon={<i className="fa-solid fa-user-shield"></i>}
                     />
                 </div>
@@ -95,6 +99,7 @@ export default function NavLinks() {
                     />
                 </div>
             )}
+            
         </nav>
     );
 }

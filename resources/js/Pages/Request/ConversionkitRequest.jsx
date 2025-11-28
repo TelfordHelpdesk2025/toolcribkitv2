@@ -38,6 +38,7 @@ const closeModals = () => {
 
     // 🔹 State for selected package info
     const [selectedTo, setSelectedTo] = useState("");
+    const [conversionkitId, setconversionkitId] = useState("");
     const [caseNo, setCaseNo] = useState("");
     const [machine, setMachine] = useState("");
     const [serial_no, setSerialNo] = useState("");
@@ -52,12 +53,14 @@ const closeModals = () => {
         const selectedPackage = packagesTo.find((pkg) => pkg.package_to === value);
 
         if (selectedPackage) {
+            setconversionkitId(selectedPackage.conversionkit_id || "");
             setCaseNo(selectedPackage.case_no || "");
             setMachine(selectedPackage.machine || "");
             setSerialNo(selectedPackage.serial_no || "");
             setLocation(selectedPackage.location || "");
         } else {
             // reset fields if no match
+            setconversionkitId("");
             setCaseNo("");
             setMachine("");
             setSerialNo("");
@@ -161,6 +164,7 @@ const closeModals = () => {
         team: Eteam,
         package_from: e.target.package_from.value,
         package_to: e.target.package_to.value,
+        conversionkitId: conversionkitId,
         case_no: caseNo,
         machine: machine,
         serial_no: serial_no,
@@ -390,48 +394,14 @@ const [remarks, setRemarks] = useState("");
           </div>
         </div>
 
-        {/* Details */}
-        {/* <div className="grid grid-cols-4 gap-4">
-          {[
-            { label: "Case No", name: "case_no", value: caseNo, setter: setCaseNo },
-            { label: "Machine", name: "machine", value: machine, setter: setMachine },
-            { label: "Serial", name: "serial_no", value: serial_no, setter: setSerialNo },
-          ].map((f, i) => (
-            <div key={i}>
-              <label className="block text-sm font-medium text-gray-500">{f.label}</label>
-              <input
-                type="text"
-                name={f.name}
-                value={f.value}
-                onChange={(e) => f.setter(e.target.value)}
-                className="w-full border border-gray-300 rounded-md p-2 bg-gray-100 cursor-not-allowed"
-                readOnly
-              />
-            </div>
-          ))}
-           {[
-            { label: "Rack Location", name: "location", value: location, setter: setLocation },
-          ].map((f, i) => (
-            <div key={i}>
-              <label className="block text-sm font-medium text-gray-500">{f.label}</label>
-              <input
-                type="text"
-                name={f.name}
-                value={f.value}
-                onChange={(e) => f.setter(e.target.value)}
-                className="w-full border border-gray-300 rounded-md p-2 bg-gray-100 cursor-not-allowed"
-                readOnly
-              />
-            </div>
-          ))}
-        </div> */}
-
         <div className="grid grid-cols-4 gap-4">
-  {[
-    { label: "Case No", name: "case_no", value: caseNo, setter: setCaseNo, editable: true },
-    { label: "Machine", name: "machine", value: machine, setter: setMachine, editable: true },
-    { label: "Serial", name: "serial_no", value: serial_no, setter: setSerialNo, editable: false },
-  ].map((f, i) => (
+{[
+  { label: "Conversionkit ID", name: "conversionkit_id", value: conversionkitId, setter: setconversionkitId, hidden: true },
+  { label: "Case No", name: "case_no", value: caseNo, setter: setCaseNo, editable: true },
+  { label: "Machine", name: "machine", value: machine, setter: setMachine, editable: true },
+  { label: "Serial", name: "serial_no", value: serial_no, setter: setSerialNo, editable: false },
+].map((f, i) => (
+  !f.hidden && (
     <div key={i}>
       <label className="block text-sm font-medium text-gray-500">{f.label}</label>
       <input
@@ -443,7 +413,9 @@ const [remarks, setRemarks] = useState("");
         readOnly={!f.editable}
       />
     </div>
-  ))}
+  )
+))}
+
 
   {[
     { label: "Rack Location", name: "location", value: location, setter: setLocation, editable: false },
@@ -516,46 +488,44 @@ const [remarks, setRemarks] = useState("");
       <div className="space-y-2 text-gray-700">
          <div className="grid grid-cols-2 gap-4">
             <div>
-                <label htmlFor="">Date</label>
+                <label htmlFor="date">Date</label>
                 <input type="text" name="date" value={selectedRow.date} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
             <div>
-                <label htmlFor="">Technician</label>
+                <label htmlFor="emp_name">Technician</label>
                 <input type="text" name="emp_name" value={selectedRow.emp_name} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
             <div>
-                <label htmlFor="">Package From</label>
+                <label htmlFor="package_from">Package From</label>
                 <input type="text" name="package_from" value={selectedRow.package_from} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
             <div>
-                <label htmlFor="">Package To</label>
+                <label htmlFor="package_to">Package To</label>
                 <input type="text" name="package_to" value={selectedRow.package_to} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
             <div>
-                <label htmlFor="">Machine</label>
+                <label htmlFor="machine">Machine</label>
                 <input type="text" name="machine" value={selectedRow.machine} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
              <div>
-                <label htmlFor="">Serial</label>
+                <label htmlFor="serial_no">Serial</label>
                 <input type="text" name="serial_no" value={selectedRow.serial_no} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
             <div>
-                <label htmlFor="">Location</label>
+                <label htmlFor="location">Location</label>
                 <input type="text" name="location" value={selectedRow.location} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
             <div>
-                <label htmlFor="">Status</label>
+                <label htmlFor="status">Status</label>
                 <input type="text" name="status" value={selectedRow.status} className="w-full border border-blue-700 text-white rounded-md p-2 pointer-events-none bg-blue-500" readOnly/>
             </div>
             <div>
-                {/* <label htmlFor="">Purpose</label> */}
-                {/* <input type="text" name="purpose" value={selectedRow.purpose} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/> */}
-                
+                <input type="text" name="conversionkitId" value={selectedRow.conversionkitId} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
             
       </div>
             <div>
-              <label htmlFor="">Purpose</label>
+              <label htmlFor="purpose">Purpose</label>
               <textarea name="purpose" value={selectedRow.purpose} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
   <div>
@@ -588,7 +558,7 @@ const [remarks, setRemarks] = useState("");
   route("conversionkit.request.approve",
     {
           id: selectedRow.id,
-          serial_no: selectedRow.serial_no,
+          conversionkitId: selectedRow.conversionkitId,
           location: selectedRow.location,
     }
   ),
@@ -628,56 +598,52 @@ const [remarks, setRemarks] = useState("");
       <div className="space-y-2 text-gray-700">
         <div className="grid grid-cols-2 gap-4">
           <div>
-                <label htmlFor="" className="text-green-500">Approved Date</label>
+                <label htmlFor="approve_date" className="text-green-500">Approved Date</label>
                 <input type="text" name="approve_date" value={selectedRow.approve_date} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
             <div>
-                <label htmlFor="" className="text-green-500">Approved By</label>
+                <label htmlFor="approver_name" className="text-green-500">Approved By</label>
                 <input type="text" name="approver_name" value={selectedRow.approver_name} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
             <div>
-                <label htmlFor="">Date</label>
+                <label htmlFor="date">Date</label>
                 <input type="text" name="date" value={selectedRow.date} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
             <div>
-                <label htmlFor="">Technician</label>
+                <label htmlFor="emp_name">Technician</label>
                 <input type="text" name="emp_name" value={selectedRow.emp_name} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
             <div>
-                <label htmlFor="">Package From</label>
+                <label htmlFor="package_from">Package From</label>
                 <input type="text" name="package_from" value={selectedRow.package_from} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
             <div>
-                <label htmlFor="">Package To</label>
+                <label htmlFor="package_to">Package To</label>
                 <input type="text" name="package_to" value={selectedRow.package_to} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
             <div>
-                <label htmlFor="">Machine</label>
+                <label htmlFor="machine">Machine</label>
                 <input type="text" name="machine" value={selectedRow.machine} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
             <div>
-                <label htmlFor="">Serial</label>
+                <label htmlFor="serial_no">Serial</label>
                 <input type="text" name="serial_no" value={selectedRow.serial_no} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
             <div>
-                <label htmlFor="">Location</label>
+                <label htmlFor="location">Location</label>
                 <input type="text" name="location" value={selectedRow.location} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
             <div>
-                <label htmlFor="">Status</label>
+                <label htmlFor="status">Status</label>
                 <input type="text" name="status" value={selectedRow.status} className="w-full border border-emerald-700 text-white rounded-md p-2 pointer-events-none bg-emerald-500" readOnly/>
-            </div>
-            <div>
-                {/* <label htmlFor="">Purpose</label>
-                <input type="text" name="purpose" value={selectedRow.purpose} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/> */}
             </div>
         </div>
         <div>
-              <label htmlFor="">Purpose</label>
+              <label htmlFor="purpose">Purpose</label>
               <textarea name="purpose" value={selectedRow.purpose} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly/>
             </div>
         <div>
-                <label htmlFor="">Remarks</label>
+                <label htmlFor="remarks">Remarks</label>
             <textarea name="purpose" value={selectedRow.remarks} className="w-full border border-gray-300 rounded-md p-2 pointer-events-none bg-gray-100" readOnly></textarea>
             </div>
       </div>

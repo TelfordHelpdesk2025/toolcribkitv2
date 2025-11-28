@@ -2,7 +2,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import DataTable from "@/Components/DataTable";
 import Modal from "@/Components/Modal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function ConversionKit({ tableData, tableFilters, emp_data }) {
     // States
@@ -11,8 +11,23 @@ export default function ConversionKit({ tableData, tableFilters, emp_data }) {
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
+    function generateConversionKitId() {
+  // Generate random 5-letter combination of upper and lower case
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  let randomLetters = "";
+  for (let i = 0; i < 5; i++) {
+    randomLetters += letters.charAt(Math.floor(Math.random() * letters.length));
+  }
+
+  // Generate random number (example: 9 digits)
+  const randomNumber = Math.floor(Math.random() * 900000000) + 100000000;
+
+  return `${randomLetters}-${randomNumber}`;
+}
+
     // Add form
     const [form, setForm] = useState({
+        conversionkit_id: "",
         case_no: "",
         asset_no: "",
         model: "",
@@ -21,12 +36,13 @@ export default function ConversionKit({ tableData, tableFilters, emp_data }) {
         location: "",
         machine: "",
         condition: "",
-        borrowed_status: "Available",
+        borrowed_status: "Returned",
     });
 
     // Edit form
     const [editForm, setEditForm] = useState({
         id: "",
+        conversionkit_id: "",
         case_no: "",
         asset_no: "",
         model: "",
@@ -49,6 +65,13 @@ export default function ConversionKit({ tableData, tableFilters, emp_data }) {
         setIsViewModalOpen(false);
     };
 
+     // Auto-generate ID when modal opens
+  useEffect(() => {
+    if (isAddModalOpen) {
+      setForm((prev) => ({ ...prev, conversionkit_id: generateConversionKitId() }));
+    }
+  }, [isAddModalOpen]);
+
     // 🟢 Add Modal
     const saveNewKit = () => {
         if (!form.case_no || !form.asset_no || !form.model) {
@@ -61,6 +84,7 @@ export default function ConversionKit({ tableData, tableFilters, emp_data }) {
             onSuccess: () => {
                 setIsAddModalOpen(false);
                 setForm({
+                    conversionkit_id: "",
                     case_no: "",
                     asset_no: "",
                     model: "",
@@ -87,16 +111,21 @@ export default function ConversionKit({ tableData, tableFilters, emp_data }) {
         setIsEditModalOpen(false);
     };
 
-    const saveEditKit = () => {
-        router.put(route("conversionkit.update", editForm.id), editForm, {
-            preserveScroll: true,
-            onSuccess: () => {
-                alert("✅ Conversion kit updated successfully!");
-                setIsEditModalOpen(false);
-                router.visit(route("conversionkit.index"));
-            },
-        });
-    };
+const saveEditKit = () => {
+    router.put(route("conversionkit.update", editForm.id), editForm, {
+        preserveScroll: true,
+        onSuccess: (page) => {
+            alert("✅ Conversion kit updated successfully!");
+            setIsEditModalOpen(false);
+            router.visit(route("conversionkit.index")); // optional
+        },
+        onError: (errors) => {
+            console.log("Validation errors:", errors);
+            alert("❌ Validation failed. Check console.");
+        },
+    });
+};
+
 
     // 🗑️ Delete Function
     const deleteActivity = (id) => {
@@ -213,56 +242,59 @@ export default function ConversionKit({ tableData, tableFilters, emp_data }) {
 
             {/* 🟢 Add Modal */}
             {isAddModalOpen && (
-                <Modal
-                    id="AddKitModal"
-                    title="Add New Conversion Kit"
-                    show={true}
-                    onClose={() => setIsAddModalOpen(false)}
-                    className="w-[400px] max-w-none"
-                >
-                    <div className="grid grid-cols-1 gap-3">
-                        {[
-                            "case_no",
-                            "asset_no",
-                            "model",
-                            "serial_no",
-                            "package_to",
-                            "location",
-                            "machine",
-                            "condition",
-                        ].map((field) => (
-                            <div key={field}>
-                                <label className="block text-sm mb-1 capitalize">
-                                    {field.replace("_", " ")}
-                                </label>
-                                <input
-                                    type="text"
-                                    className="input input-bordered w-full"
-                                    value={form[field]}
-                                    onChange={(e) =>
-                                        setForm({ ...form, [field]: e.target.value })
-                                    }
-                                />
-                            </div>
-                        ))}
-                    </div>
+        <Modal
+          id="AddKitModal"
+          icon={<i className="fa-solid fa-plus"></i>}
+          title="Add New Conversion Kit"
+          show={true}
+          onClose={() => setIsAddModalOpen(false)}
+          className="w-[400px] max-w-none"
+        >
+          <div className="grid grid-cols-1 gap-3">
+            {[
+              "conversionkit_id",
+              "case_no",
+              "asset_no",
+              "model",
+              "serial_no",
+              "package_to",
+              "location",
+              "machine",
+              "condition",
+            ].map((field) => (
+              <div key={field}>
+                <label className="block text-sm mb-1 capitalize">
+                  {field.replace("_", " ")}
+                </label>
+                <input
+                  type="text"
+                  className="input input-bordered w-full"
+                  value={form[field]}
+                  onChange={(e) =>
+                    setForm({ ...form, [field]: e.target.value })
+                  }
+                  readOnly={field === "conversionkit_id"} // Read-only for the generated ID
+                />
+              </div>
+            ))}
+          </div>
 
-                    <div className="flex justify-end mt-6">
-                        <button
-                            className="btn bg-red-600 text-white hover:bg-red-700 mr-2 rounded-md"
-                            onClick={() => setIsAddModalOpen(false)}
-                        >
-                            <i className="fa-solid fa-x"></i> Cancel
-                        </button>
-                        <button
-                            className="btn bg-green-600 text-white hover:bg-green-700 rounded-md"
-                            onClick={saveNewKit}
-                        >
-                            <i className="fa-solid fa-floppy-disk"></i> Save
-                        </button>
-                    </div>
-                </Modal>
-            )}
+          <div className="flex justify-end mt-6">
+            <button
+              className="btn bg-red-600 text-white hover:bg-red-700 mr-2 rounded-md"
+              onClick={() => setIsAddModalOpen(false)}
+            >
+              <i className="fa-solid fa-x"></i> Cancel
+            </button>
+            <button
+              className="btn bg-green-600 text-white hover:bg-green-700 rounded-md"
+              onClick={saveNewKit}
+            >
+              <i className="fa-solid fa-floppy-disk"></i> Save
+            </button>
+          </div>
+        </Modal>
+      )}
 
             {/* 🟢 Edit Modal */}
             {isEditModalOpen && (

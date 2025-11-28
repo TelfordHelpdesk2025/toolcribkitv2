@@ -147,7 +147,7 @@ class ConversionkitBorrowedController extends Controller
         return back()->with('success', 'Request turnover successfully!');
     }
 
-    public function accept($id, $machine, $serial_no, $location, Request $request)
+    public function accept($id, $conversionkitId, $location, Request $request)
     {
         DB::connection('server26')->table('toolcrib_tbl')
             ->where('id', $id)
@@ -160,8 +160,7 @@ class ConversionkitBorrowedController extends Controller
             ]);
 
         DB::connection('server26')->table('conversion_kit')
-            ->where('machine', $machine)
-            ->where('serial_no', $serial_no)
+            ->where('conversionkit_id', $conversionkitId)
             ->where('location', $location)
             ->update([
                 'borrowed_status' => 'Returned'
