@@ -8,6 +8,8 @@ import { useState } from "react";
 export default function Admin({ tableData, tableFilters, emp_data }) {
     const [role, setRole] = useState(null);
 
+    console.log(emp_data);
+
     function removeAdmin(id) {
         router.post(
             route("removeAdmin"),
@@ -50,7 +52,7 @@ export default function Admin({ tableData, tableFilters, emp_data }) {
                     <i className="fa-solid fa-users"></i> PM Toolcrib
                 </h1>
 
-                {["superadmin", "admin", "toolcrib"].includes(emp_data?.emp_system_role) && (
+                {["superadmin", "admin", "toolcrib"].includes(emp_data?.emp_role) && (
                     <button
                          className="text-white bg-emerald-500 border-emerald-900 btn hover:bg-emerald-700"
                         onClick={() =>
@@ -119,7 +121,7 @@ export default function Admin({ tableData, tableFilters, emp_data }) {
                             </div>
 
                             {/* Admin Controls */}
-                            {["superadmin", "admin"].includes(emp_data?.emp_system_role) &&
+                            {["superadmin", "admin"].includes(emp_data?.emp_role) &&
                                 !row.emp_role.includes("superadmin") && (
                                     <div className="mt-6 space-y-4">
                                         <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
@@ -130,10 +132,10 @@ export default function Admin({ tableData, tableFilters, emp_data }) {
                                             onChange={(e) => setRole(e.target.value)}
                                             className="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm p-2"
                                         >
-                                            {emp_data?.emp_system_role === "superadmin" && (
+                                            {emp_data?.emp_role === "superadmin" && (
                                                 <option value="superadmin">Superadmin</option>
                                             )}
-                                            {["superadmin", "admin"].includes(emp_data?.emp_system_role) && (
+                                            {["superadmin", "admin"].includes(emp_data?.emp_role) && (
                                                 <option value="admin">Admin</option>
                                             )}
                                             <option value="toolcrib">Toolcrib</option>

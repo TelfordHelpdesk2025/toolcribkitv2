@@ -23,7 +23,7 @@ export default function Dashboard({
   toolkitReturned
 }) {
   const props = usePage().props;
-  const role = emp_data?.emp_system_role ?? "user";
+  const role = emp_data?.emp_role ?? "user";
   const empName = emp_data?.emp_firstname ?? "User";
   const empBadge = emp_data?.emp_id ?? "User";
 

@@ -219,7 +219,7 @@ const tableRows = tableData.data.map((row) => ({
   actions: (() => {
     // ✅ Case 1: Admins — show Assess button
     if (
-      ["superadmin", "admin", "toolcrib"].includes(emp_data?.emp_system_role) && ["16103", "1710", "1707"].includes(emp_data?.emp_id) &&
+      ["superadmin", "admin", "toolcrib"].includes(emp_data?.emp_role) && ["16103", "1710", "1707"].includes(emp_data?.emp_id) &&
       row.status === "For Approval"
     ) {
       return (

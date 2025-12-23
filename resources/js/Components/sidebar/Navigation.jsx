@@ -48,7 +48,7 @@ export default function NavLinks() {
                     },
                 ]}
             />
-{["superadmin", "admin"].includes(emp_data?.emp_system_role) || ["1710", "16103", "1707"].includes(emp_data?.emp_id) && (
+{["superadmin", "admin"].includes(emp_data?.emp_role) || ["1710", "16103", "1707"].includes(emp_data?.emp_id) && (
             <Dropdown
                 label="Returned Items"
                 icon={<i className="fa-solid fa-boxes-packing"></i>}
@@ -65,7 +65,7 @@ export default function NavLinks() {
             />
 )}
 
-{["superadmin", "admin"].includes(emp_data?.emp_system_role) || ["1710", "16103", "1707"].includes(emp_data?.emp_id) && (
+{["superadmin", "admin"].includes(emp_data?.emp_role) || ["1710", "16103", "1707"].includes(emp_data?.emp_id) && (
             <SidebarLink
                 href={route("expired.conversionkit.request")}
                 label="Expired Requests"
@@ -73,7 +73,7 @@ export default function NavLinks() {
             />
 )}
 
-{["superadmin", "admin"].includes(emp_data?.emp_system_role) || ["1710", "16103", "1707"].includes(emp_data?.emp_id) && (
+{["superadmin", "admin"].includes(emp_data?.emp_role) || ["1710", "16103", "1707"].includes(emp_data?.emp_id) && (
             <Dropdown
                 label="Inventory"
                 icon={<i className="fa-solid fa-list-ol"></i>}
@@ -90,7 +90,7 @@ export default function NavLinks() {
             />
 )}
 
-            {["superadmin", "admin", "toolcrib"].includes(emp_data?.emp_system_role) && (
+            {["superadmin", "admin", "toolcrib"].includes(emp_data?.emp_role) && (
                 <div>
                     <SidebarLink
                         href={route("admin")}
@@ -99,7 +99,7 @@ export default function NavLinks() {
                     />
                 </div>
             )}
-            {["superadmin"].includes(emp_data?.emp_system_role) && (
+            {["superadmin"].includes(emp_data?.emp_role) && (
                 <div>
                     <SidebarLink
                         href={route("employees.index")}
