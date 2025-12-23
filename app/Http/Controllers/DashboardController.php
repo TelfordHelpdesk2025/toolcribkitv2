@@ -13,6 +13,21 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
 
+        DB::connection('server26')->table('toolcrib_tbl')
+            ->where('status', 'like', 'for approval%')
+            ->whereNotNull('date')
+            ->whereRaw("
+        TIMESTAMPDIFF(
+            HOUR,
+            STR_TO_DATE(date, '%m/%d/%Y %H:%i:%s'),
+            NOW()
+        ) >= 12
+    ")
+            ->update([
+                'status' => 'Deleted'
+            ]);
+
+
 
         $empData = session('emp_data');
         $empName = $empData['emp_name'] ?? null;

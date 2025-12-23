@@ -19,14 +19,14 @@ export default function NavLinks() {
                 label="Requested Items"
                 icon={<i className="fa-solid fa-arrows-turn-to-dots"></i>}
                 links={[
-                    // {
-                    //     href: route("conversionkit.request.index"),
-                    //     label: "Conversion Kits",
-                    // },
                     {
-                        href: route("maintenance"),
+                        href: route("conversionkit.request.index"),
                         label: "Conversion Kits",
                     },
+                    // {
+                    //     href: route("maintenance"),
+                    //     label: "Conversion Kits",
+                    // },
                     {
                         href: route("toolkit.request.index"),
                         label: "Tools",
@@ -64,6 +64,15 @@ export default function NavLinks() {
                 ]}
             />
 )}
+
+{["superadmin", "admin"].includes(emp_data?.emp_system_role) || ["1710", "16103", "1707"].includes(emp_data?.emp_id) && (
+            <SidebarLink
+                href={route("expired.conversionkit.request")}
+                label="Expired Requests"
+                icon={<i className="fa-regular fa-calendar-xmark"></i>}
+            />
+)}
+
 {["superadmin", "admin"].includes(emp_data?.emp_system_role) || ["1710", "16103", "1707"].includes(emp_data?.emp_id) && (
             <Dropdown
                 label="Inventory"

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use App\Events\ConversionKitRequested;
 
-class conversionkitRequestController extends Controller
+class ConversionkitRequestController extends Controller
 {
     protected $datatable;
     protected $datatable1;
@@ -90,7 +90,7 @@ class conversionkitRequestController extends Controller
                         ->orderByRaw("CASE WHEN status = 'For Acknowledge' THEN 0 ELSE 1 END")
                         ->orderBy('id', 'desc');
                 },
-                'searchColumns' => ['date', 'emp_name', 'package_from', 'package_to', 'case_no', 'machine'],
+                'searchColumns' => ['date', 'emp_name', 'package_from', 'package_to', 'case_no', 'machine', 'serial_no', 'location', 'taper_track', 'purpose', 'status'],
             ]
         );
 
@@ -104,6 +104,41 @@ class conversionkitRequestController extends Controller
             'packagesFrom' => $packagesFrom,
             'packagesTo' => $packagesTo,
             'conversionkit_request' => $conversionkit_request,
+            'tableFilters' => $request->only([
+                'search',
+                'perPage',
+                'sortBy',
+                'sortDirection',
+                'start',
+                'end',
+                'dropdownSearchValue',
+                'dropdownFields',
+            ]),
+        ]);
+    }
+
+    public function expired(Request $request)
+    {
+        $result = $this->datatable->handle(
+            $request,
+            'server26',
+            'toolcrib_tbl',
+            [
+                'conditions' => function ($query) {
+                    return $query
+                        ->where('status', 'Deleted')
+                        ->orderBy('id', 'desc');
+                },
+                'searchColumns' => ['date', 'emp_name', 'package_from', 'package_to', 'case_no', 'machine', 'status'],
+            ]
+        );
+
+        if ($result instanceof \Symfony\Component\HttpFoundation\StreamedResponse) {
+            return $result;
+        }
+
+        return Inertia::render('Request/ExpiredRequest', [
+            'tableData' => $result['data'],
             'tableFilters' => $request->only([
                 'search',
                 'perPage',

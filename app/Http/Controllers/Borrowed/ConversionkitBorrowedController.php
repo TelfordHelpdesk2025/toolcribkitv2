@@ -159,6 +159,8 @@ class ConversionkitBorrowedController extends Controller
                 'accept_remarks' => $request->input('accept_remarks'),
             ]);
 
+        // dd($conversionkitId);
+
         DB::connection('server26')->table('conversion_kit')
             ->where('conversionkit_id', $conversionkitId)
             ->where('location', $location)
