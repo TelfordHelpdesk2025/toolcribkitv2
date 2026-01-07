@@ -15,6 +15,7 @@ export default function NavLinks() {
                 icon={<i className="fa-solid fa-gauge"></i>}
             />
 
+
             <Dropdown
                 label="Requested Items"
                 icon={<i className="fa-solid fa-arrows-turn-to-dots"></i>}
@@ -94,7 +95,7 @@ export default function NavLinks() {
                 <div>
                     <SidebarLink
                         href={route("admin")}
-                        label="PM Personnel"
+                        label="Tool Crib Admin"
                         icon={<i className="fa-solid fa-user-shield"></i>}
                     />
                 </div>

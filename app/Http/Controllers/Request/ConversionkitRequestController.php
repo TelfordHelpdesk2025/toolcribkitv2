@@ -190,54 +190,6 @@ class ConversionkitRequestController extends Controller
         return back()->with('success', '✅ Request submitted successfully!');
     }
 
-    // public function store(Request $request)
-    // {
-    //     // ✅ Validate inputs
-    //     $request->validate([
-    //         'emp_id'        => 'required|string',
-    //         'emp_name'      => 'required|string',
-    //         'team'          => 'required|string',
-    //         'package_from'  => 'required|string',
-    //         'package_to'    => 'required|string',
-    //         'case_no'       => 'required|string',
-    //         'machine'       => 'required|string',
-    //         'serial_no'     => 'required|string',
-    //         'location'      => 'required|string',
-    //         'taper_track'   => 'required|string',
-    //         'purpose'       => 'required|string',
-    //     ]);
-
-    //     // 🔹 Insert into server26 DB
-    //     DB::connection('server26')->table('toolcrib_tbl')->insert([
-    //         'date'          => Carbon::now()->format('m/d/Y H:i:s'),
-    //         'emp_id'        => $request->emp_id,
-    //         'emp_name'      => $request->emp_name,
-    //         'team'          => $request->team,
-    //         'package_from'  => $request->package_from,
-    //         'package_to'    => $request->package_to,
-    //         'case_no'       => $request->case_no,
-    //         'machine'       => $request->machine,
-    //         'serial_no'     => $request->serial_no,
-    //         'location'      => $request->location,
-    //         'taper_track'   => $request->taper_track,
-    //         'purpose'       => $request->purpose,
-    //         'status'        => 'For Approval',
-    //     ]);
-
-    //     // 🔹 Prepare data to broadcast
-    //     $data = $request->all();
-    //     $data['status'] = 'For Approval';
-    //     $data['date'] = Carbon::now()->format('m/d/Y H:i:s');
-
-    //     // 🔹 Broadcast event for realtime
-    //     broadcast(new ConversionKitRequested((object)$data))->toOthers();
-
-    //     // ✅ Return a proper Inertia response with flash message
-    //     return back()->with('success', '✅ Request submitted successfully!');
-    // }
-
-
-
     public function approve($id, $conversionkitId, $location, Request $request)
     {
         DB::connection('server26')->table('toolcrib_tbl')
